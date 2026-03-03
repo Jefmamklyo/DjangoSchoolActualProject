@@ -30,6 +30,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BSSSRemake\admin.py" />
+    <Compile Include="BSSSRemake\apps.py" />
+    <Compile Include="BSSSRemake\migrations\__init__.py" />
+    <Compile Include="BSSSRemake\models.py" />
+    <Compile Include="BSSSRemake\tests.py" />
+    <Compile Include="BSSSRemake\views.py" />
+    <Compile Include="BSSSRemake\__init__.py" />
     <Compile Include="manage.py" />
     <Compile Include="DjangoSchoolActualProject\__init__.py" />
     <Compile Include="DjangoSchoolActualProject\settings.py" />
@@ -37,9 +44,14 @@
     <Compile Include="DjangoSchoolActualProject\wsgi.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BSSSRemake\templates\BSSSRemake\index.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="BSSSRemake\" />
+    <Folder Include="BSSSRemake\migrations\" />
+    <Folder Include="BSSSRemake\templates\" />
+    <Folder Include="BSSSRemake\templates\BSSSRemake\" />
     <Folder Include="DjangoSchoolActualProject\" />
   </ItemGroup>
   <ItemGroup>
