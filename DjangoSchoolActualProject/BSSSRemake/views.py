@@ -3,33 +3,36 @@ from django.shortcuts import render, redirect
 
 from django.http import HttpResponse
 
-#http request parameter django autmatically passes to the view
-def view1(request):
-    #list
-    return render(
-        request,
-        #Dictonariy of content in the template
-        "BSSSRemake/index.html",
-        {
-            'title' : "View 1 title",
-            'content' : "view 2 content"
-            
-           }
-        
-        )
 
-def view2(request):
-    #list
-    return render(
-        request,
-        #Dictonariy of content in the template
-        "BSSSRemake/index.html",
-        {
-            'title' : "View 2 title",
-            'content' : "View 2 content"
-            
-           }
-        
-        )
+#for class based views
+from django.views.generic import TemplateView
 
-# Create your views here.
+
+class View1(TemplateView):
+    template_name = "BSSSRemake/index.html"
+
+    #get and populate variables in template, **kwargs allow vriable amount of kwargs to be passed through
+    def get_context_data(self, **kwargs):
+        #calls the parent method to get context
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Title view 1"
+        context["content"] = "Content view 1"
+        return context
+    
+
+
+class View2(TemplateView):
+    template_name = "BSSSRemake/index.html"
+
+    #get and populate variables in template, **kwargs allow vriable amount of kwargs to be passed through
+    def get_context_data(self, **kwargs):
+        #calls the parent method to get context
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Title view 2"
+        context["content"] = "Cpmtent view 2"
+        return context
+    
+
+
+
+

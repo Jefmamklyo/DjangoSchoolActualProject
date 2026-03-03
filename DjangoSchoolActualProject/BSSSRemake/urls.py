@@ -1,9 +1,15 @@
+#
+#This is a app level urls.py
+#
+
+
 from django.urls import path
-#import views from this file
+from django.views.generic import RedirectView
 from . import views
 
+
 urlpatterns = [
-    #We are visiting the root url and this defines that so no path
-    path("view1/", views.view1, name="view1"),
-    path("view2/", views.view1, name="view2")
+    path("", RedirectView.as_view(pattern_name="view1", permanent=False)),
+    path("view1/", views.View1.as_view(), name="view1"),
+    path("view2/", views.View2.as_view(), name="view2"),
 ]
