@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     #We are visiting the root url and this defines that so no path
-    path("", views.index, name="index"),
+    path("view1/", views.view1, name="view1"),
+    path("view2/", views.view1, name="view2")
 ]
