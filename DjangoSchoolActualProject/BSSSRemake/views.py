@@ -1,17 +1,16 @@
-from django import shortcuts
-from django.shortcuts import render, redirect
-
 from django.http import HttpResponse
 
-
+from django import shortcuts
 #for class based views
 from django.views.generic import TemplateView
 
 
+    
+    
+    
 class View1(TemplateView):
     template_name = "BSSSRemake/index.html"
-
-    #get and populate variables in template, **kwargs allow vriable amount of kwargs to be passed through
+    
     def get_context_data(self, **kwargs):
         #calls the parent method to get context
         context = super().get_context_data(**kwargs)
