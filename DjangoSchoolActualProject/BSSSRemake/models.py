@@ -1,18 +1,21 @@
-from enum import unique
 from django.db import models
 
 # Create your models here.
 
 
-class School(models.Model):
-    name = models.CharField(max_length = 50) #arbitrarty amount
-    courses = models.ManyToManyField("Course") #Automatically craetes a junction table
+
+
+class Course(models.Model):
+    name = models.CharField(max_length=50)  # Name of the course
     #Human readable values
     def __str__(self):
         return self.name
 
-class Course(models.Model):
-    achievementStandards = models.CharField(max_length = 50) #arbitrarty amount
+
+#defined course after
+class School(models.Model):
+    name = models.CharField(max_length=50)  # Name of the school
+    courses = models.ManyToManyField(Course, blank=True)  # link to courses
     #Human readable values
     def __str__(self):
-        return self.achievementStandards
+        return self.name

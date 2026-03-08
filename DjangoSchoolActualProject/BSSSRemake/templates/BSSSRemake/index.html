@@ -8,20 +8,18 @@
         <h2>{{ title }}</h2>
         {{ content }}
     </p>
-    <!--Loop through schools-->
+
     {% for school in schools %}
     <h2>{{ school.name }}</h2>
-    <!--Loop through courses in schools-->
     <ul>
         {% for course in school.courses.all %}
-        <li>{{ course.achievementStandards }}</li>
+        <li>{{ course.name }}</li>
         {% empty %}
-        <li>No courses</li>
+        <li>No courses assigned</li>
         {% endfor %}
     </ul>
+
     {% endfor %}
-
-
 
 </body>
 </html>
