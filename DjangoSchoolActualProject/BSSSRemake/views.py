@@ -4,6 +4,7 @@ from django import shortcuts
 #for class based views
 from django.views.generic import TemplateView
 
+from .models import School
 
     
     
@@ -16,6 +17,9 @@ class View1(TemplateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Title view 1"
         context["content"] = "Content view 1"
+
+        #Query school and courses while removing lazy loading
+        context["schools"] = School.objects.prefetch_related("courses")
         return context
     
 
