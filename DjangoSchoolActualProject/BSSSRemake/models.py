@@ -6,6 +6,7 @@ from django.db import models
 
 class School(models.Model):
     name = models.CharField(max_length = 50) #arbitrarty amount
+    courses = models.ManyToManyField("Course") #Automatically craetes a junction table
     #Human readable values
     def __str__(self):
         return self.name
@@ -15,11 +16,3 @@ class Course(models.Model):
     #Human readable values
     def __str__(self):
         return self.achievementStandards
-
-#Junction Table
-class schoolCourses(models.Model):
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-        #constraints to prevent duplicates
-    class Meta:
-        unique_together = ("school", "course")
