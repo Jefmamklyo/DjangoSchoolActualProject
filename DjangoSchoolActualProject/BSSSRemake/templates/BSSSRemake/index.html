@@ -9,23 +9,26 @@
         {{ content }}
     </p>
 
-    {% for school in schools %}
-    <h2>{{ school.name }}</h2>
+    <form method="post">
+        {%csrf_token%}
+        {{ form.as_p}} <!-- Renders form fields inside <p> tags -->
+        <button type="submit">Save</button>
+    </form>
+
+
     <ul>
-        {% for course in school.courses.all %}
-        <li>{{ course.name }}</li>
-        {% empty %}
-        <li>No courses assigned</li>
+        {% for school in schools %}
+        <li>
+            {{ school.name }}
+            <ul>
+                {% for course in school.courses.all %}
+                <li>{{ course.name }} - {{ course.unitInformation }} (Semester {{ course.semester1 }})</li>
+                {% endfor %}
+            </ul>
+        </li>
         {% endfor %}
     </ul>
 
-    {% endfor %}
-
-    <form method="post">
-        {%csrf_token%}
-        {{ forms.as_p}} <!-- Renders form fields inside <p> tags -->
-        <button type="submit">Save</button>
-    </form>
 </body>
 </html>
 

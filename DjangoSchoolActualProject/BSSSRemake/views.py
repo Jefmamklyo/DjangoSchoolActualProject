@@ -31,17 +31,16 @@ class View1(TemplateView):
  
     
 class View2(CreateView):
-    model = School
+    model = Course
     form_class = InputForms
     template_name = "BSSSRemake/index.html"
-    fields = ["name","semester","info"]
-    template_name = "BSSSRemake/index.html"
+    success_url = "/view2/"
      #get and populate variables in template, **kwargs allow vriable amount of kwargs to be passed through
     def get_context_data(self, **kwargs):
         #calls the parent method to get context
         context = super().get_context_data(**kwargs)
         context["title"] = "Title view 2"
-        context["content"] = "Cpmtent view 2"
+        context["content"] = "Comtent view 2"
 
         #Query school and courses while removing lazy loading
         context["schools"] = School.objects.prefetch_related("courses")
