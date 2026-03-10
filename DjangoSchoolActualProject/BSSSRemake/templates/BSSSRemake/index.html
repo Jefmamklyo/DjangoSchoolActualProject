@@ -9,25 +9,42 @@
         {{ content }}
     </p>
 
-    <form method="post">
-        {%csrf_token%}
-        {{ form.as_p}} <!-- Renders form fields inside <p> tags -->
-        <button type="submit">Save</button>
-    </form>
+    {% if View2 %}
+        <!--Button for froms-->
+        <form method="post">
+            {%csrf_token%}
+            {{ form.as_p}} <!-- Renders form fields inside <p> tags -->
+            <button type="submit">Save</button>
+        </form>
 
 
-    <ul>
-        {% for school in schools %}
-        <li>
-            {{ school.name }}
-            <ul>
-                {% for course in school.courses.all %}
-                <li>{{ course.name }} - {{ course.unitInformation }} (Semester {{ course.semester1 }})</li>
+
+            <!--Display Feilds-->
+        <table>
+            <thead>
+                <tr>
+                    <th> ID </th>
+                    <th> Name </th>
+                    <th> Uinfo </th>
+                    <th> Semester </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in courses %}
+                <tr>
+                    <td> {{course.pk}} </td>
+                    <td> {{ course.name }} </td>
+                    <td> {{ course.unitInformation }}   </td>
+                    <td> (Semester {{ course.semester1 }})  </td>
+                </tr>
                 {% endfor %}
-            </ul>
-        </li>
-        {% endfor %}
-    </ul>
+            </tbody>
+        </table>
+
+    {% endif %}
+  
+
 
 </body>
 </html>
