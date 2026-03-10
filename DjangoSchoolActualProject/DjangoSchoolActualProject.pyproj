@@ -33,6 +33,7 @@
     <Compile Include="BSSSRemake\admin.py" />
     <Compile Include="BSSSRemake\apps.py" />
     <Compile Include="BSSSRemake\context_processors.py" />
+    <Compile Include="BSSSRemake\forms.py" />
     <Compile Include="BSSSRemake\migrations\__init__.py" />
     <Compile Include="BSSSRemake\models.py" />
     <Compile Include="BSSSRemake\tests.py" />

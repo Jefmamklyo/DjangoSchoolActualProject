@@ -21,6 +21,11 @@
 
     {% endfor %}
 
+    <form method="post">
+        {%csrf_token%}
+        {{ forms.as_p}} <!-- Renders form fields inside <p> tags -->
+        <button type="submit">Save</button>
+    </form>
 </body>
 </html>
 
