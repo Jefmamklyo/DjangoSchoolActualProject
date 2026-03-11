@@ -1,15 +1,10 @@
 from string.templatelib import Template
-from django.db.models import F
-from django.forms import Form, fields
 from django.http import HttpResponse
-
 from django import shortcuts
 #for class based views
 from django.views.generic import CreateView, ListView, TemplateView
 
 from .models import School, Course
-
-
 from .forms import InputForms
 from django.views.generic.edit import FormView
     

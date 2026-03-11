@@ -36,6 +36,7 @@
     <Compile Include="BSSSRemake\forms.py" />
     <Compile Include="BSSSRemake\migrations\__init__.py" />
     <Compile Include="BSSSRemake\models.py" />
+    <Compile Include="BSSSRemake\service.py" />
     <Compile Include="BSSSRemake\tests.py" />
     <Compile Include="BSSSRemake\urls.py" />
     <Compile Include="BSSSRemake\views.py" />
