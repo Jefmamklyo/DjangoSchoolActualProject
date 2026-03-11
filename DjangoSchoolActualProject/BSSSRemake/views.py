@@ -1,12 +1,15 @@
+#other
 from string.templatelib import Template
 from django.http import HttpResponse
 from django import shortcuts
+
 #for class based views
 from django.views.generic import CreateView, ListView, TemplateView
 
+#import from Other Files
 from .models import School, Course
 from .forms import InputForms
-from django.views.generic.edit import FormView
+from .service import CourseValidator
     
     
 class View1(TemplateView):
@@ -17,8 +20,6 @@ class View1(TemplateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Title View 1"
         context["content"] = "Content View 1"
-
-        
         return context
     
 
@@ -30,6 +31,18 @@ class View2(CreateView):
     form_class = InputForms
     template_name = "BSSSRemake/index.html"
     success_url = "/view2/"
+
+    def form_valid(self, form):
+        #access variables beofre submission
+        Name = form.cleaned_data["name"]
+        Semester = form.cleaned_data["semester1"]
+        Unit = form.ckeaned_data["unitInformation"]
+
+        #initilise the CourseValidator and pass in parameters gotten from feild into the constructor
+        validator = CourseValidator(Name, Semester, Unit)
+        
+        #save the form data to the database
+        return super().form_valid(form)
 
      #get and populate variables in template, **kwargs allow vriable amount of kwargs to be passed through
     def get_context_data(self, **kwargs):

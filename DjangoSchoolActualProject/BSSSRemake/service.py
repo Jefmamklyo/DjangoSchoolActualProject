@@ -3,7 +3,16 @@ from .models import Course
 from functools import wraps
 from django.core.exceptions import ValidationError
 
-
+#define the decorator
+def loggingDecorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs): #define wrapper with args and kwargs
+        #function which we are wrapping
+        value = func(*args, **kwargs) #store function return values in a feild
+        if value: #if value exists
+            print("error exists") 
+        return value
+    return wrapper
 
 class CourseValidator():
     def __init__(self, Name, Semester, Unit):
@@ -45,12 +54,13 @@ class CourseValidator():
             if error:
                 return error
 
+    @loggingDecorator #decorate this function
     def Validate(self):
         #add validation function 
         Error = list(self.validationRun())
         if Error:
             raise ValidationError()
-        return
+        return []
 
 
 
