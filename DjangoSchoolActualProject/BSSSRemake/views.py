@@ -2,6 +2,8 @@
 from string.templatelib import Template
 from django.http import HttpResponse
 from django import shortcuts
+from django.core.exceptions import ValidationError
+
 
 #for class based views
 from django.views.generic import CreateView, ListView, TemplateView
@@ -36,11 +38,22 @@ class View2(CreateView):
         #access variables beofre submission
         Name = form.cleaned_data["name"]
         Semester = form.cleaned_data["semester1"]
-        Unit = form.ckeaned_data["unitInformation"]
+        Unit = form.cleaned_data["unitInformation"]
 
         #initilise the CourseValidator and pass in parameters gotten from feild into the constructor
         validator = CourseValidator(Name, Semester, Unit)
+
         
+
+        #run validate
+        try:
+            validator.Validate()
+        except ValidationError as V:
+            #add errors to form and redisplay
+            form.add_error(None, V) #defines the error as general and not feild specficic
+            return self.form_invalid(form)
+            
+
         #save the form data to the database
         return super().form_valid(form)
 

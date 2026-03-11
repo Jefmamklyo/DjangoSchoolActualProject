@@ -44,8 +44,12 @@
 
     {% endif %}
   
-    <p>  {{Warning }} </p>
-
+    <!-- display error -->
+    {% if form.non_feild_errors %}
+    <ul>
+        <li> Your input was wrong </li>
+    </ul>
+    {% endif %}
 </body>
 </html>
 

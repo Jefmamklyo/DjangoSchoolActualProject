@@ -25,17 +25,13 @@ class CourseValidator():
 
     def duplicate(self):
         #make coursename = form input
-        if Course.objects.filter(name__iexact = self.name).exists():
+        if Course.objects.filter(name__iexact = self.Name).exists():
             return f"course '{self.Name}' exists"
 
     def semOutOfBounds(self):
-        if self.Semester < 0 or self.Semester > 4:
+        if self.Semester <= 0 or self.Semester > 4:
             return "Semester is out of bounds"
 
-    def UInfoTooShort(self):
-        letterCount = sum(c.isaplha() for c in self.Unit)
-        if letterCount < 5:
-            return "unit info too short"
 
     #________________
     #validation rules activation
@@ -44,7 +40,6 @@ class CourseValidator():
     def validationRun(self):
         VRule = [
             self.semOutOfBounds,
-            self.UInfoTooShort,
             self.duplicate
             ]
         for i in VRule:
@@ -53,13 +48,14 @@ class CourseValidator():
             #chcek if error exists
             if error:
                 return error
-
+            else:
+                return []
     @loggingDecorator #decorate this function
     def Validate(self):
         #add validation function 
         Error = list(self.validationRun())
         if Error:
-            raise ValidationError()
+            raise ValidationError("This is an error")
         return []
 
 
