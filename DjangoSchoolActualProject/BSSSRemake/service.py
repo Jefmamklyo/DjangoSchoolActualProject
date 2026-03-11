@@ -1,5 +1,9 @@
-from django.forms import formset_factory
+from django.forms import forms
 from .models import Course
+from functools import wraps
+from django.core.exceptions import ValidationError
+
+
 
 class CourseValidator():
     def __init__(self, Name, Semester, Unit):
@@ -34,7 +38,7 @@ class CourseValidator():
             self.UInfoTooShort,
             self.duplicate
             ]
-        for i in Vrule:
+        for i in VRule:
             #store the return value
             error = i()
             #chcek if error exists
@@ -43,7 +47,10 @@ class CourseValidator():
 
     def Validate(self):
         #add validation function 
-        pass
+        Error = list(self.validationRun())
+        if Error:
+            raise ValidationError()
+        return
 
 
 
