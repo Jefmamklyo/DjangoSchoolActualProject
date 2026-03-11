@@ -66,7 +66,7 @@ class View2(CreateView):
         context["View2"] = True
 
         #Query school and courses while removing lazy loading
-        context["courses"] = Course.objects.select_related()
+        context["courses"] = Course.objects.all()
         return context
 
     

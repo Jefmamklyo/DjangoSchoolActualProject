@@ -10,46 +10,51 @@
     </p>
 
     {% if View2 %}
-        <!--Button for froms-->
-        <form method="post">
-            {%csrf_token%}
-            {{ form.as_p}} <!-- Renders form fields inside <p> tags -->
-            <button type="submit">Save</button>
-        </form>
+    <!--Button for froms-->
+    <form method="post">
+        {%csrf_token%}
+        {{ form.as_p}} <!-- Renders form fields inside <p> tags -->
+        <button type="submit">Save</button>
+    </form>
 
-
-
-            <!--Display Feilds-->
-        <table>
-            <thead>
-                <tr>
-                    <th> ID </th>
-                    <th> Name </th>
-                    <th> Uinfo </th>
-                    <th> Semester </th>
-
-                </tr>
-            </thead>
-            <tbody>
-                {% for course in courses %}
-                <tr>
-                    <td> {{course.pk}} </td>
-                    <td> {{ course.name }} </td>
-                    <td> {{ course.unitInformation }}   </td>
-                    <td> (Semester {{ course.semester1 }})  </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-    {% endif %}
-  
     <!-- display error -->
-    {% if form.non_feild_errors %}
+    {% if form.non_field_errors %}
     <ul>
-        <li> Your input was wrong </li>
+        {% for error in form.non_field_errors %}
+        <li> {{ error }} </li>
+        {% endfor %}
     </ul>
     {% endif %}
+
+
+
+    <!--Display Feilds-->
+    <table>
+        <thead>
+            <tr>
+                <th> ID </th>
+                <th> Name </th>
+                <th> Uinfo </th>
+                <th> Semester </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td> {{course.pk}} </td>
+                <td> {{ course.name }} </td>
+                <td> {{ course.unitInformation }}   </td>
+                <td> (Semester {{ course.semester1 }})  </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% endif %}
+
+
+
 </body>
 </html>
 

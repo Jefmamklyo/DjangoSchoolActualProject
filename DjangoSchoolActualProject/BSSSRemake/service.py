@@ -1,17 +1,19 @@
-from django.forms import forms
 from .models import Course
 from functools import wraps
 from django.core.exceptions import ValidationError
 
-#define the decorator
+#define the decorator for loggig (DEBUG)
 def loggingDecorator(func):
     @wraps(func)
     def wrapper(*args, **kwargs): #define wrapper with args and kwargs
         #function which we are wrapping
-        value = func(*args, **kwargs) #store function return values in a feild
-        if value: #if value exists
-            print("error exists") 
-        return value
+         #store function return values in a feild
+        try:
+            value = func(*args, **kwargs)
+            return value
+        except ValidationError as e:
+            print("Got an error", e)
+            raise #raise the error again so the views cathces it
     return wrapper
 
 class CourseValidator():
@@ -26,7 +28,7 @@ class CourseValidator():
     def duplicate(self):
         #make coursename = form input
         if Course.objects.filter(name__iexact = self.Name).exists():
-            return f"course '{self.Name}' exists"
+            return f"Course '{self.Name}' exists"
 
     def semOutOfBounds(self):
         if self.Semester <= 0 or self.Semester > 4:
@@ -42,21 +44,22 @@ class CourseValidator():
             self.semOutOfBounds,
             self.duplicate
             ]
+
         for i in VRule:
-            #store the return value
+            #store the return value/ values
             error = i()
             #chcek if error exists
             if error:
-                return error
-            else:
-                return []
+                yield error
+                
+
     @loggingDecorator #decorate this function
     def Validate(self):
         #add validation function 
         Error = list(self.validationRun())
         if Error:
-            raise ValidationError("This is an error")
-        return []
+            raise ValidationError(Error)
+        return False
 
 
 
