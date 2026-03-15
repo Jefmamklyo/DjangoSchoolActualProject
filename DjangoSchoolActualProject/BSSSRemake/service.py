@@ -17,10 +17,9 @@ def loggingDecorator(func):
     return wrapper
 
 class CourseValidator():
-    def __init__(self, Name, Semester, Unit):
+    def __init__(self, Name, Semester):
         self.Name = Name
         self.Semester = Semester
-        self.Unit = Unit
     #________________
     #validation rules
     #________________

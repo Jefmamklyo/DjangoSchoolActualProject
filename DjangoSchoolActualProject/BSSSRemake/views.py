@@ -40,10 +40,10 @@ class View2(CreateView):
         #access variables beofre submission
         Name = form.cleaned_data["name"]
         Semester = form.cleaned_data["semester1"]
-        Unit = form.cleaned_data["unitInformation"]
+        
 
         #initilise the CourseValidator and pass in parameters gotten from feild into the constructor
-        validator = CourseValidator(Name, Semester, Unit)
+        validator = CourseValidator(Name, Semester)
 
         
 
