@@ -13,6 +13,20 @@
         {{ content }}
     </p>
 
+    {% if View1 %}
+      {% for school in schools %}
+      <h2>{{ school.name }}</h2>  
+      <!--Loop through courses in schools-->
+          <ul>
+              {% for course in school.courses.all %}
+              <li>{{ course.name }}</li>
+              {% empty %}
+              <li>No courses</li>
+              {% endfor %}
+          </ul>
+      {% endfor %}
+  {% endif %}
+
     {% if View2 %}
     <!--Button for froms-->
     <form method="post">

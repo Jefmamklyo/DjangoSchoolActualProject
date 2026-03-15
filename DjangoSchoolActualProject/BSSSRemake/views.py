@@ -22,6 +22,8 @@ class View1(TemplateView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Title View 1"
         context["content"] = "Content View 1"
+        context["schools"] = School.objects.prefetch_related("courses")
+        context["View1"] = True
         return context
     
 
