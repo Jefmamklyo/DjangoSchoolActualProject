@@ -12,7 +12,6 @@
         <h2>{{ title }}</h2>
         {{ content }}
     </p>
-    
 
     {% if View1 %}
       {% for school in schools %}
@@ -30,11 +29,13 @@
 
     {% if View2 %}
     <!--Button for froms-->
-    <form method="post">
-        {%csrf_token%}
-        {{ form.as_p}} <!-- Renders form fields inside <p> tags -->
-        <button type="submit">Save</button>
-    </form>
+          <form method="post">
+              {%csrf_token%}
+              {% for field in form %}
+                  {{ field }}
+              {% endfor %} <!-- Renders form fields inside <p> tags -->
+              <button type="submit">Save</button>
+          </form>
 
     <!-- display error -->
     {% if form.non_field_errors %}
