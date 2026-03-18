@@ -25,6 +25,7 @@ class View1(TemplateView):
         context["schools"] = School.objects.prefetch_related("courses")
         context["View1"] = True
         return context
+
     
 
 
