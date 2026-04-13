@@ -5,8 +5,8 @@ from .models import Course, ProjectInfo
 class InputForms(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ["name","semester1", "unitInformation"]
+        fields = "__all__"
 class PROJECTFORMS(forms.ModelForm):
     class Meta:
         model = ProjectInfo
-        fields = ["weighting","project"]
+        fields = "__all__"

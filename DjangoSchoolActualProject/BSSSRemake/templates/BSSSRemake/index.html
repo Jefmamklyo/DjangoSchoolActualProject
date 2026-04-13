@@ -85,16 +85,19 @@
     <table>
         <thead>
             <tr>
+                <th> Course_Name</th>
+                <th> Project_Name </th>
                 <th> Weighting </th>
-                <th> Name </th>
+
+
             </tr>
         </thead>
         <tbody>
             {% for feild in ProjectInfo %}
             <tr>
-                <td> {{feild.weighting}} </td>
+                <td> {{feild.courseName}} </td>
                 <td> {{ feild.project }} </td>
-
+                <td> {{feild.weighting}} </td>
             </tr>
             {% endfor %}
         </tbody>
