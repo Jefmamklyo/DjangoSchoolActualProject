@@ -14,28 +14,28 @@
     </p>
 
     {% if View1 %}
-      {% for school in schools %}
-      <h2>{{ school.name }}</h2>  
-      <!--Loop through courses in schools-->
-          <ul>
-              {% for course in school.courses.all %}
-              <li>{{ course.name }}</li>
-              {% empty %}
-              <li>No courses</li>
-              {% endfor %}
-          </ul>
-      {% endfor %}
-  {% endif %}
+    {% for school in schools %}
+    <h2>{{ school.name }}</h2>
+    <!--Loop through courses in schools-->
+    <ul>
+        {% for course in school.courses.all %}
+        <li>{{ course.name }}</li>
+        {% empty %}
+        <li>No courses</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+    {% endif %}
 
     {% if View2 %}
     <!--Button for froms-->
-          <form method="post">
-              {%csrf_token%}
-              {% for field in form %}
-                  {{ field }}
-              {% endfor %} <!-- Renders form fields inside <p> tags -->
-              <button type="submit">Save</button>
-          </form>
+    <form method="post">
+        {%csrf_token%}
+        {% for field in form %}
+        {{ field }}
+        {% endfor %} <!-- Renders form fields inside <p> tags -->
+        <button type="submit" name="course_submit">Save</button>
+    </form>
 
     <!-- display error -->
     {% if form.non_field_errors %}
@@ -71,7 +71,37 @@
         </tbody>
     </table>
 
+
+    <!--Adjacency list Button for FORMS-->
+    <form method="post">
+        {%csrf_token%}
+        {% for field in projectForm %}
+          {{ field }}
+        {% endfor %} 
+        <button type="submit" name="project_submit" >Save</button>
+    </form>
+
+    <!--Adjancecy list Feilds -->
+    <table>
+        <thead>
+            <tr>
+                <th> Weighting </th>
+                <th> Name </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for feild in ProjectInfo %}
+            <tr>
+                <td> {{feild.weighting}} </td>
+                <td> {{ feild.project }} </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     {% endif %}
+
 
 
 
