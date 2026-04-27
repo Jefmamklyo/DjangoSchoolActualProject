@@ -1,6 +1,9 @@
 from .models import Course
+from .models import ProjectInfo
 from functools import wraps
 from django.core.exceptions import ValidationError
+
+from collections import defaultdict
 
 #define the decorator for loggig (DEBUG)
 def loggingDecorator(func):
@@ -63,16 +66,64 @@ class CourseValidator():
 
 
 
+###Adjacecny list
+class conflictDetection():
+    def __init__(self, queryset):
 
+        self.queryset = queryset
+        self.graph = defaultdict(lambda: defaultdict(int))
 
+    def time():
+        #weight edges based on time. Done before creating adjavnecy list for edge weigthing.
+        pass
 
+    def createAdjacency(self):
+        #create adjacecy
+        for obj in self.queryset:
+            courseName = obj.courseName
+            projectName = obj.project
 
+            self.graph[courseName][projectName] += 1
+     
+    def normolizeList(self):
+        #list to store normlolised list
+        listNormalized = {}
 
+        #courses is key 1, project is key 2
+        for course, project in self.graph.items():
+            total = sum(project.values())
+            
 
+            if total > 0:  #avoid 0 divis   ion 
+                #dictionary compherehension
+                listNormalized[course] = { 
+                    k : v/ total 
+                    for k, v in project.items()       
+                    }
+               
+            #repeat loop if there is a 0 division
+          
+        return listNormalized
 
+    def reccomendation(self, graph, choiceAmount = 2):
+        #reccomed with alogirthms to before passing to views
+            #create an algorithm whuich gets the greatest values form the reverse adjanecy list graphs 
+        sortedDict = {}
 
-
-
+        for courses, projects in graph.items():
+            sortedProjects = sorted(
+                projects.items(),
+                key = lambda x: x[1],
+                reverse = True           
+                )
+            sortedDict[courses] = sortedProjects[:choiceAmount]
+        return sortedDict
+        
+    
+    def run(self):
+        self.createAdjacency()
+        normalised = self.normolizeList()
+        return self.reccomendation(normalised)
 
 # class ConflictService():
 

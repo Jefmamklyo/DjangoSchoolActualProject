@@ -6,12 +6,13 @@ from django.core.exceptions import ValidationError
 
 
 #for class based views
-from django.views.generic import CreateView, ListView, TemplateView
+from django.views.generic import CreateView, ListView, TemplateView, View
 
 #import from Other Files
 from .models import School, Course, ProjectInfo
-from .forms import InputForms
+from .forms import InputForms, PROJECTFORMS
 from .service import CourseValidator
+from .service import conflictDetection
     
     
 class View1(TemplateView):
@@ -27,11 +28,9 @@ class View1(TemplateView):
         return context
 
 
-
- 
     
 class View2(CreateView):
-    model = Course, ProjectInfo
+    model = Course
     form_class = InputForms
     template_name = "BSSSRemake/index.html"
     success_url = "/view2/"
@@ -40,12 +39,9 @@ class View2(CreateView):
         #access variables beofre submission
         Name = form.cleaned_data["name"]
         Semester = form.cleaned_data["semester1"]
-        
 
         #initilise the CourseValidator and pass in parameters gotten from feild into the constructor
         validator = CourseValidator(Name, Semester)
-
-        
 
         #run validate
         try:
@@ -69,10 +65,31 @@ class View2(CreateView):
 
         #Query school and courses while removing lazy loading
         context["courses"] = Course.objects.all()
+        return context
 
+      
+
+   
+############################################################
+#______________________Adjacecny List______________________#
+############################################################
+class Reccomendation(CreateView):
+    template_name = "BSSSRemake/index.html"
+    success_url = "/recommendation/"
+    form_class = PROJECTFORMS
+    model = ProjectInfo
+
+
+    def get_context_data(self, **kwargs):
+        #calls the parent method to get context
+        context = super().get_context_data(**kwargs)
         
         # Query project fields
         context["ProjectInfo"] = ProjectInfo.objects.all()
-        return context
+        context["projectForm"] = context["form"]  
+        context["Reccomendation"] = True
 
-    
+        #run reccomendation
+
+
+        return context

@@ -6,6 +6,7 @@
     <!-- Anchor Tags -->
     <a href="{% url 'view1' %}"> {{ LView1 }} </a>
     <a href="{% url 'view2' %}"> {{ LView2 }} </a>
+    <a href="{% url 'recommendation' %}"> {{ LReccomendation }} </a>
 
     <p>
         <h1> {{ projectName }}</h1>
@@ -29,12 +30,12 @@
 
     {% if View2 %}
     <!--Button for froms-->
-    <form method="post">
-        {%csrf_token%}
+    <form method="post" action="{% url 'view2' %}">
+        {% csrf_token %}
         {% for field in form %}
         {{ field }}
-        {% endfor %} <!-- Renders form fields inside <p> tags -->
-        <button type="submit" name="course_submit">Save</button>
+        {% endfor %}
+        <button type="submit">Save</button>
     </form>
 
     <!-- display error -->
@@ -70,17 +71,20 @@
             {% endfor %}
         </tbody>
     </table>
+    {% endif %}
 
-
+    <!----------------------------------->
+    <!--     Adjacecy list system      -->
+    <!----------------------------------->
+    {% if Reccomendation %}
     <!--Adjacency list Button for FORMS-->
-    <form method="post">
-        {%csrf_token%}
+    <form method="post" action="{% url 'recommendation' %}">
+        {% csrf_token %}
         {% for field in projectForm %}
-          {{ field }}
-        {% endfor %} 
-        <button type="submit" name="project_submit" >Save</button>
+        {{ field }}
+        {% endfor %}
+        <button type="submit">Save</button>
     </form>
-
     <!--Adjancecy list Feilds -->
     <table>
         <thead>
@@ -103,7 +107,9 @@
         </tbody>
     </table>
 
+   <!--Adjancecy list Reccomendations
     {% endif %}
+
 
 
 
