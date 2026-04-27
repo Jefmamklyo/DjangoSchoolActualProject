@@ -4,6 +4,9 @@ from functools import wraps
 from django.core.exceptions import ValidationError
 
 from collections import defaultdict
+from django.utils import timezone
+from datetime import timedelta
+
 
 #define the decorator for loggig (DEBUG)
 def loggingDecorator(func):
@@ -73,17 +76,26 @@ class conflictDetection():
         self.queryset = queryset
         self.graph = defaultdict(lambda: defaultdict(int))
 
-    def time():
-        #weight edges based on time. Done before creating adjavnecy list for edge weigthing.
-        pass
+    def timeWeight(self, obj):
+        now = timezone.now()
+        timeChange = now - obj.createdAt
 
+        seconds = timeChange.total_seconds()
+
+        weighting = (seconds * 0.99)  + 1
+
+        return weighting
+        
+    
     def createAdjacency(self):
+        
         #create adjacecy
         for obj in self.queryset:
             courseName = obj.courseName
             projectName = obj.project
+            weight = self.timeWeight(obj)
 
-            self.graph[courseName][projectName] += 1
+            self.graph[courseName][projectName] += weight
      
     def normolizeList(self):
         #list to store normlolised list
@@ -124,6 +136,26 @@ class conflictDetection():
         self.createAdjacency()
         normalised = self.normolizeList()
         return self.reccomendation(normalised)
+
+    def runMax(self):
+        self.createAdjacency()
+        normalised = self.normolizeList()
+
+        #varialbes
+        bCourse = None
+        bProject = None
+        topScore = 0
+
+        #loop thourgh frist key
+        for course, projects in normalised.items():
+            #loop through second keys and get the highest score 
+            for project, score in projects.items():
+                if score > topScore:
+                    topScore = score
+                    bCourse = course
+                    bProject = project
+
+        return bCourse, bProject
 
 # class ConflictService():
 

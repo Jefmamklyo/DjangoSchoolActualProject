@@ -77,6 +77,18 @@ class Reccomendation(CreateView):
     form_class = PROJECTFORMS
     model = ProjectInfo
 
+    def get_initial(self):
+        initial = super().get_initial()
+
+        data = ProjectInfo.objects.all()
+        cd = conflictDetection(data)
+    
+        course, project = cd.runMax()
+        
+        initial["courseName"] = course
+        initial["project"] = project
+
+        return initial
 
     def get_context_data(self, **kwargs):
         #calls the parent method to get context

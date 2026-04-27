@@ -13,7 +13,6 @@ class School(models.Model):
     courses = models.ManyToManyField(Course, blank=True)
 
 class ProjectInfo(models.Model):
-    weighting = models.IntegerField(db_index = True)
     projectChoices = [ #Sets choises
         ("RESEARCH","RESEARCH"),
         ("PROTOTYPE","PROTOTYPE"),      
@@ -36,3 +35,4 @@ class ProjectInfo(models.Model):
         choices = courseChoices,
         default = "SOFTWARE"
         )
+    createdAt = models.DateTimeField(auto_now=True)
