@@ -184,4 +184,4 @@ class conflictDetection():
                     
 
 #             return dict(adjacency)
-    
+#

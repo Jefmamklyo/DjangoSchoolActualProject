@@ -104,5 +104,5 @@ class Reccomendation(CreateView):
         cd = conflictDetection(projInf)
         context["recommendations"] = cd.run()
 
-
+        
         return context
