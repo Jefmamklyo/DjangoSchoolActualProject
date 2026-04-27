@@ -107,7 +107,30 @@
         </tbody>
     </table>
 
-   <!--Adjancecy list Reccomendations
+    <!--Adjancecy list Reccomendations-->
+
+    <h1> Reccomendation </h1>
+    <!--nested for loops -->
+    {% for course, projects in recommendations.items %}
+    <h2> {{course}} </h2>
+    <ul>
+        {% for project, weighting in projects %}
+        <li>
+            {% if forloop.first %}
+            <strong> {{project}} </strong>
+            {%else%}
+            {{project}}
+            {% endif %}
+            - {{ weighting|floatformat:3 }}
+        </li>
+        {% endfor %}
+        <!-- No data empty section-->
+    </ul>
+
+    {% empty %}
+    <p>No data available.</p>
+    {% endfor %}
+
     {% endif %}
 
 

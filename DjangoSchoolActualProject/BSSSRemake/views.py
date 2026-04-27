@@ -1,7 +1,5 @@
 #other
-from string.templatelib import Template
 from django.http import HttpResponse
-from django import shortcuts
 from django.core.exceptions import ValidationError
 
 
@@ -85,11 +83,14 @@ class Reccomendation(CreateView):
         context = super().get_context_data(**kwargs)
         
         # Query project fields
-        context["ProjectInfo"] = ProjectInfo.objects.all()
+        projInf = ProjectInfo.objects.all()
+        context["ProjectInfo"] = projInf
         context["projectForm"] = context["form"]  
         context["Reccomendation"] = True
 
         #run reccomendation
+        cd = conflictDetection(projInf)
+        context["recommendations"] = cd.run()
 
 
         return context
