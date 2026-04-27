@@ -6,6 +6,7 @@
     <!-- Anchor Tags -->
     <a href="{% url 'view1' %}"> {{ LView1 }} </a>
     <a href="{% url 'view2' %}"> {{ LView2 }} </a>
+    <a href="{% url 'recommendation' %}"> {{ LReccomendation }} </a>
 
     <p>
         <h1> {{ projectName }}</h1>
@@ -14,28 +15,28 @@
     </p>
 
     {% if View1 %}
-      {% for school in schools %}
-      <h2>{{ school.name }}</h2>  
-      <!--Loop through courses in schools-->
-          <ul>
-              {% for course in school.courses.all %}
-              <li>{{ course.name }}</li>
-              {% empty %}
-              <li>No courses</li>
-              {% endfor %}
-          </ul>
-      {% endfor %}
-  {% endif %}
+    {% for school in schools %}
+    <h2>{{ school.name }}</h2>
+    <!--Loop through courses in schools-->
+    <ul>
+        {% for course in school.courses.all %}
+        <li>{{ course.name }}</li>
+        {% empty %}
+        <li>No courses</li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+    {% endif %}
 
     {% if View2 %}
     <!--Button for froms-->
-          <form method="post">
-              {%csrf_token%}
-              {% for field in form %}
-                  {{ field }}
-              {% endfor %} <!-- Renders form fields inside <p> tags -->
-              <button type="submit">Save</button>
-          </form>
+    <form method="post" action="{% url 'view2' %}">
+        {% csrf_token %}
+        {% for field in form %}
+        {{ field }}
+        {% endfor %}
+        <button type="submit">Save</button>
+    </form>
 
     <!-- display error -->
     {% if form.non_field_errors %}
@@ -70,8 +71,67 @@
             {% endfor %}
         </tbody>
     </table>
+    {% endif %}
+
+    <!----------------------------------->
+    <!--     Adjacecy list system      -->
+    <!----------------------------------->
+    {% if Reccomendation %}
+    <!--Adjacency list Button for FORMS-->
+    <form method="post" action="{% url 'recommendation' %}">
+        {% csrf_token %}
+        {% for field in projectForm %}
+        {{ field }}
+        {% endfor %}
+        <button type="submit">Save</button>
+    </form>
+    <!--Adjancecy list Feilds -->
+    <table>
+        <thead>
+            <tr>
+                <th> Course_Name</th>
+                <th> Project_Name </th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for feild in ProjectInfo %}
+            <tr>
+                <td> {{feild.courseName}} </td>
+                <td> {{ feild.project }} </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!--Adjancecy list Reccomendations-->
+
+    <h1> Reccomendation </h1>
+    <!--nested for loops -->
+    {% for course, projects in recommendations.items %}
+    <h2> {{course}} </h2>
+    <ul>
+        {% for project, weighting in projects %}
+        <li>
+            {% if forloop.first %}
+            <strong> {{project}} </strong>
+            {%else%}
+            {{project}}
+            {% endif %}
+            - {{ weighting|floatformat:3 }}
+        </li>
+        {% endfor %}
+        <!-- No data empty section-->
+    </ul>
+
+    {% empty %}
+    <p>No data available.</p>
+    {% endfor %}
 
     {% endif %}
+
+
 
 
 

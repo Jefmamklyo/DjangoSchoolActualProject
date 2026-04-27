@@ -1,6 +1,12 @@
 from .models import Course
+from .models import ProjectInfo
 from functools import wraps
 from django.core.exceptions import ValidationError
+
+from collections import defaultdict
+from django.utils import timezone
+from datetime import timedelta
+
 
 #define the decorator for loggig (DEBUG)
 def loggingDecorator(func):
@@ -63,16 +69,93 @@ class CourseValidator():
 
 
 
+###Adjacecny list
+class conflictDetection():
+    def __init__(self, queryset):
 
+        self.queryset = queryset
+        self.graph = defaultdict(lambda: defaultdict(int))
 
+    def timeWeight(self, obj):
+        now = timezone.now()
+        timeChange = now - obj.createdAt
 
+        seconds = timeChange.total_seconds()
 
+        weighting = (seconds * 0.99)  + 1
 
+        return weighting
+        
+    
+    def createAdjacency(self):
+        
+        #create adjacecy
+        for obj in self.queryset:
+            courseName = obj.courseName
+            projectName = obj.project
+            weight = self.timeWeight(obj)
 
+            self.graph[courseName][projectName] += weight
+     
+    def normolizeList(self):
+        #list to store normlolised list
+        listNormalized = {}
 
+        #courses is key 1, project is key 2
+        for course, project in self.graph.items():
+            total = sum(project.values())
+            
 
+            if total > 0:  #avoid 0 divis   ion 
+                #dictionary compherehension
+                listNormalized[course] = { 
+                    k : v/ total 
+                    for k, v in project.items()       
+                    }
+               
+            #repeat loop if there is a 0 division
+          
+        return listNormalized
 
+    def reccomendation(self, graph, choiceAmount = 2):
+        #reccomed with alogirthms to before passing to views
+            #create an algorithm whuich gets the greatest values form the reverse adjanecy list graphs 
+        sortedDict = {}
 
+        for courses, projects in graph.items():
+            sortedProjects = sorted(
+                projects.items(),
+                key = lambda x: x[1],
+                reverse = True           
+                )
+            sortedDict[courses] = sortedProjects[:choiceAmount]
+        return sortedDict
+        
+    
+    def run(self):
+        self.createAdjacency()
+        normalised = self.normolizeList()
+        return self.reccomendation(normalised)
+
+    def runMax(self):
+        self.createAdjacency()
+        normalised = self.normolizeList()
+
+        #varialbes
+        bCourse = None
+        bProject = None
+        topScore = 0
+
+        #loop thourgh frist key
+        for course, projects in normalised.items():
+            #loop through second keys and get the highest score 
+            for project, score in projects.items():
+                if score > topScore:
+                    topScore = score
+                    bCourse = course
+                    bProject = project
+
+        return bCourse, bProject
 
 # class ConflictService():
 

@@ -1,17 +1,16 @@
 #other
-from string.templatelib import Template
 from django.http import HttpResponse
-from django import shortcuts
 from django.core.exceptions import ValidationError
 
 
 #for class based views
-from django.views.generic import CreateView, ListView, TemplateView
+from django.views.generic import CreateView, ListView, TemplateView, View
 
 #import from Other Files
-from .models import School, Course
-from .forms import InputForms
+from .models import School, Course, ProjectInfo
+from .forms import InputForms, PROJECTFORMS
 from .service import CourseValidator
+from .service import conflictDetection
     
     
 class View1(TemplateView):
@@ -26,10 +25,7 @@ class View1(TemplateView):
         context["View1"] = True
         return context
 
-    
 
-
- 
     
 class View2(CreateView):
     model = Course
@@ -41,12 +37,9 @@ class View2(CreateView):
         #access variables beofre submission
         Name = form.cleaned_data["name"]
         Semester = form.cleaned_data["semester1"]
-        
 
         #initilise the CourseValidator and pass in parameters gotten from feild into the constructor
         validator = CourseValidator(Name, Semester)
-
-        
 
         #run validate
         try:
@@ -72,7 +65,44 @@ class View2(CreateView):
         context["courses"] = Course.objects.all()
         return context
 
+      
+
+   
+############################################################
+#______________________Adjacecny List______________________#
+############################################################
+class Reccomendation(CreateView):
+    template_name = "BSSSRemake/index.html"
+    success_url = "/recommendation/"
+    form_class = PROJECTFORMS
+    model = ProjectInfo
+
+    def get_initial(self):
+        initial = super().get_initial()
+
+        data = ProjectInfo.objects.all()
+        cd = conflictDetection(data)
     
+        course, project = cd.runMax()
+        
+        initial["courseName"] = course
+        initial["project"] = project
+
+        return initial
+
+    def get_context_data(self, **kwargs):
+        #calls the parent method to get context
+        context = super().get_context_data(**kwargs)
+        
+        # Query project fields
+        projInf = ProjectInfo.objects.all()
+        context["ProjectInfo"] = projInf
+        context["projectForm"] = context["form"]  
+        context["Reccomendation"] = True
+
+        #run reccomendation
+        cd = conflictDetection(projInf)
+        context["recommendations"] = cd.run()
 
 
-
+        return context

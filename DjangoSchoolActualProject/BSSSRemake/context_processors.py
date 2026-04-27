@@ -5,5 +5,6 @@ def customProc(request):
     return{
         "projectName": 'BSSS Rework',
         "LView1": "View1",
-        "LView2": "View2"
+        "LView2": "View2",
+        "LReccomendation": "Reccomendation"
         }
