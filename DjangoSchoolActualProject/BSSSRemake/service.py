@@ -141,20 +141,17 @@ class conflictDetection():
         self.createAdjacency()
         normalised = self.normolizeList()
 
-        #varialbes
-        bCourse = None
-        bProject = None
-        topScore = 0
-
         #loop thourgh frist key
-        for course, projects in normalised.items():
-            #loop through second keys and get the highest score 
-            for project, score in projects.items():
-                if score > topScore:
-                    topScore = score
-                    bCourse = course
-                    bProject = project
 
+        bCourse, bProject, topWeight = max(
+                ( 
+                    (course, project, weight) 
+                    for course, projects in normalised.items() 
+                    for project, weight in  projects.items()
+                ),
+                key = lambda x: x[2],
+                default = (None,None, 0)
+            )             
         return bCourse, bProject
 
 # class ConflictService():
