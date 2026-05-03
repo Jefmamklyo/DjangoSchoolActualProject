@@ -6,6 +6,6 @@ def customProc(request):
         "projectName": 'BSSS Rework',
         "LView1": "View1",
         "LView2": "View2",
-        "LReccomendation": "Reccomendation"
+        "LReccomendation": "Reccomendation",
         "LForm": "FormUpload"
         }

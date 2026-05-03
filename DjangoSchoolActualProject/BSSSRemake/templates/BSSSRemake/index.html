@@ -7,7 +7,7 @@
     <a href="{% url 'view1' %}"> {{ LView1 }} </a>
     <a href="{% url 'view2' %}"> {{ LView2 }} </a>
     <a href="{% url 'recommendation' %}"> {{ LReccomendation }} </a>
-    <a href="{% url 'uploads' %}"> {{ LForm }} </a>
+    <a href="{% url 'upload' %}"> {{ LForm }} </a>
 
 
     <p>
@@ -139,7 +139,7 @@
     {% if uploadForm %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.files }}
+        {{ formUpload.files }}
         <button type="submit">UploadFiles</button>
     </form>
     <!-- Display errors-->
@@ -159,10 +159,13 @@
         <ul>
             {% for f in files %}
             <li>
-                {{ f }} 
-                <a href="{{ MEDIA_URL }}uploads/{{ f }}" download>
-                    Download
-                </a>
+                {% if f|lower.endswith:('.png', '.jpg', '.jpeg') %}
+                <img src="{{ MEDIA_URL }}uploads/{{ f }}" alt="{{ f }}" width="300">
+                {% elif f|lower.endswith:'.pdf' %}
+                <iframe src="{{ MEDIA_URL }}uploads/{{ f }}" width="600" height="800"></iframe>
+                {% else %}
+                 <p>cant display file {{f}}</p>
+                {% endif %}
             </li>
             {% endfor %}
         </ul>

@@ -121,7 +121,7 @@ class UploadFiles(FormView):
     def getFiles(self):
         path = os.path.join(settings.MEDIA_ROOT, "uploads")
 
-        #null chaning
+        #null chaining
         if not os.path.exists(path):
             return []
 
@@ -129,7 +129,6 @@ class UploadFiles(FormView):
 
     def form_valid(self, form):
         uploadedFiles = self.request.FILES.getlist("files")
-
         for file in uploadedFiles:
            try:
                 errors = []
@@ -142,6 +141,7 @@ class UploadFiles(FormView):
         return super().form_valid(form)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["formUpload"] = UploadFile()
         context["uploadForm"] = True
         context["files"] = self.getFiles()
         return context

@@ -170,9 +170,9 @@ class conflictDetection():
 
 
 
-import magic 
+import magic
 
-allowedMimeTypes = ['image/png', 'image/jpeg', 'application/pdf']
+allowedMimeTypes = ['image/png', 'image/jpeg', 'image/jpg','application/pdf']
 def mimeCheckDecorator(func):
     @wraps(func)
     def wrapper(file, errors, *args, **kwargs):
@@ -199,7 +199,7 @@ def sanitizeFileNameDecorator(func):
     @wraps(func)
     def wrapper(file ,errors, *args, **kwargs):
         cleaned = "".join(c for c in file.name if c.isalnum() or c in (' ', '.', '_')).rstrip()
-        file = cleaned
+        file.name = cleaned
         return func(file, errors,*args, **kwargs)
     return wrapper
 

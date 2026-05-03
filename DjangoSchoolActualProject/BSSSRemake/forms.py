@@ -13,4 +13,6 @@ class PROJECTFORMS(forms.ModelForm):
         fields = "__all__"
 
 class UploadFile(forms.Form):
-    files = forms.FileField(widget = forms.ClearableFileInput(attrs={'multiple': True}), required=False)
+    files = forms.FileField(
+        widget=forms.FileInput()
+    )
