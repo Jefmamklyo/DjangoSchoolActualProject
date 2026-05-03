@@ -6,7 +6,11 @@ class InputForms(forms.ModelForm):
     class Meta:
         model = Course
         fields = "__all__"
+
 class PROJECTFORMS(forms.ModelForm):
     class Meta:
         model = ProjectInfo
         fields = "__all__"
+
+class UploadFile(forms.Form):
+    files = forms.FileField(widget = forms.ClearableFileInput(attrs={'multiple': True}))

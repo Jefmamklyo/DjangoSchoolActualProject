@@ -68,8 +68,10 @@ class CourseValidator():
 
 
 
+###________________________###
+###_____Adjacecny list_____###
+###________________________###
 
-###Adjacecny list
 class conflictDetection():
     def __init__(self, queryset):
 
@@ -153,6 +155,80 @@ class conflictDetection():
                 default = (None,None, 0)
             )             
         return bCourse, bProject
+
+
+###________________________###
+###_____File Valdation_____###
+###________________________###
+
+###Decorators 
+
+import magic 
+
+allowedMimeTypes = ['img/png', 'img.jpeg', 'application/pdf']
+def mimeCheckDecorator(func):
+    @wraps(func)
+    def wrapper(file, *args, **kwargs):
+        mime = magic.from_buffer(file.read(1024), mime = True) #read the first 1024 bitest o get mime type
+        file.seek(0) #reset buffer
+
+        if mime not in allowedMimeTypes:
+            return f"Not allows file type {mime}"
+        return func(file, *args, **kwargs)
+    return wrapper
+
+
+def fileSizeCheckDecorator(maxFileSize):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(file, *args, **kwargs):
+            if file.size > maxFileSize * 1024 * 1024: #coverts to megabytes
+                return f"{file.name} bigger than {maxFileSize}"
+            return func(file, *args, **kwargs)
+        return wrapper
+    return decorator
+
+def sanitizeFileNameDecorator(func):
+    @wraps(func)
+    def wrapper(file, *args, **kwargs):
+        cleaned = "".join(c for c in file if c.isalnum() or c in (' ', '.', '_')).rstrip()
+        file = cleaned
+        return func(file, *args, **kwargs)
+    return wrapper
+
+##saving
+import uuid
+
+def uniqueFileName(name):
+    return f"{uuid.uuid4().hex}_{name}"
+
+
+DIR
+@fileSizeCheckDecorator(5) #5mb 
+@mimeCheckDecorator()
+@sanitizeFileNameDecorator
+def saveFile():
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # class ConflictService():
 
