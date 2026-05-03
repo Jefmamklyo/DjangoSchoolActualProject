@@ -7,6 +7,7 @@ from collections import defaultdict
 from django.utils import timezone
 from datetime import timedelta
 
+import os
 
 #define the decorator for loggig (DEBUG)
 def loggingDecorator(func):
@@ -203,11 +204,27 @@ def uniqueFileName(name):
     return f"{uuid.uuid4().hex}_{name}"
 
 
-DIR
+uploadDIR = os.path.join(settings.MEDIA_ROOT, "uploads")
+
 @fileSizeCheckDecorator(5) #5mb 
 @mimeCheckDecorator()
 @sanitizeFileNameDecorator
-def saveFile():
+def saveFile(file):
+
+    #dynamically creating upload dir
+    if not os.path.exists(uploadDIR):
+        os.makedirs(uploadDIR)
+
+    #Creating unique filenaem
+    filename = uniqueFileName(file.name)
+    path = os.path.join(uploadDIR)
+    #saving
+    with open(path, "wb+")  as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+
+    return filename
+
 
 
         
