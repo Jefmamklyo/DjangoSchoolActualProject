@@ -7,4 +7,5 @@ def customProc(request):
         "LView1": "View1",
         "LView2": "View2",
         "LReccomendation": "Reccomendation"
+        "LForm": "FormUpload"
         }

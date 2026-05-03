@@ -1,16 +1,20 @@
 #other
 from django.http import HttpResponse
 from django.core.exceptions import ValidationError
+import os 
+from django.conf import settings
+from django.contrib import messages
 
 
 #for class based views
-from django.views.generic import CreateView, ListView, TemplateView, View
+from django.views.generic import CreateView, ListView, TemplateView, View, FormView
 
 #import from Other Files
 from .models import School, Course, ProjectInfo
-from .forms import InputForms, PROJECTFORMS
+from .forms import InputForms, PROJECTFORMS, UploadFile
 from .service import CourseValidator
 from .service import conflictDetection
+from . service import saveFile
     
     
 class View1(TemplateView):
@@ -105,4 +109,39 @@ class Reccomendation(CreateView):
         context["recommendations"] = cd.run()
 
         
+        return context
+############################################################
+#_______________________File Uploads_______________________#
+############################################################
+class UploadFiles(FormView):
+    template_name = "BSSSRemake/index.html"
+    form_class = UploadFile
+    success_url = "/upload/"#add somethign here 
+
+    def getFiles(self):
+        path = os.path.join(settings.MEDIA_ROOT, "uploads")
+
+        #null chaning
+        if not os.path.exists(path):
+            return []
+
+        return os.listdir(path)
+
+    def form_valid(self, form):
+        uploadedFiles = self.request.FILES.getlist("files")
+
+        for file in uploadedFiles:
+           try:
+                errors = []
+                filename = saveFile(file,errors)
+                messages.success(self.request, f"{filename} was uploaded")
+           except ValidationError as e:
+               for error in e.messages:
+                   messages.error(self.request, f"{file.name}: {error}")
+
+        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["uploadForm"] = True
+        context["files"] = self.getFiles()
         return context

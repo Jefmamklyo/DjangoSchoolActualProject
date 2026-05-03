@@ -7,6 +7,8 @@
     <a href="{% url 'view1' %}"> {{ LView1 }} </a>
     <a href="{% url 'view2' %}"> {{ LView2 }} </a>
     <a href="{% url 'recommendation' %}"> {{ LReccomendation }} </a>
+    <a href="{% url 'uploads' %}"> {{ LForm }} </a>
+
 
     <p>
         <h1> {{ projectName }}</h1>
@@ -130,10 +132,44 @@
     {% endfor %}
 
     {% endif %}
-
-
-
-
+    <!------------------------>
+    <!-- File upload systme -->
+    <!------------------------>
+    <!-- form uploads-->
+    {% if uploadForm %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.files }}
+        <button type="submit">UploadFiles</button>
+    </form>
+    <!-- Display errors-->
+    {% if messages %}
+    <h3>Errors</h3>
+    <ul>
+        {% for message in messages %}
+        <li>
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <!--Display uploaded files-->
+    <h3>Uploaded Files</h3>
+        {% if files %}
+        <ul>
+            {% for f in files %}
+            <li>
+                {{ f }} 
+                <a href="{{ MEDIA_URL }}uploads/{{ f }}" download>
+                    Download
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+    <p>Please Upload Files</p>
+    {% endif %}
+    {%endif%}
 
 </body>
 </html>

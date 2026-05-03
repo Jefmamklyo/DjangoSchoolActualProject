@@ -1,3 +1,4 @@
+from posixpath import exists
 from .models import Course
 from .models import ProjectInfo
 from functools import wraps
@@ -6,6 +7,9 @@ from django.core.exceptions import ValidationError
 from collections import defaultdict
 from django.utils import timezone
 from datetime import timedelta
+
+
+from django.conf import settings
 
 import os
 
@@ -164,37 +168,39 @@ class conflictDetection():
 
 ###Decorators 
 
+
+
 import magic 
 
-allowedMimeTypes = ['img/png', 'img.jpeg', 'application/pdf']
+allowedMimeTypes = ['image/png', 'image/jpeg', 'application/pdf']
 def mimeCheckDecorator(func):
     @wraps(func)
-    def wrapper(file, *args, **kwargs):
+    def wrapper(file, errors, *args, **kwargs):
         mime = magic.from_buffer(file.read(1024), mime = True) #read the first 1024 bitest o get mime type
         file.seek(0) #reset buffer
 
         if mime not in allowedMimeTypes:
-            return f"Not allows file type {mime}"
-        return func(file, *args, **kwargs)
+            errors.append(f"Not allows file type {mime}")
+        return func(file, errors,*args, **kwargs)
     return wrapper
 
 
 def fileSizeCheckDecorator(maxFileSize):
     def decorator(func):
         @wraps(func)
-        def wrapper(file, *args, **kwargs):
+        def wrapper(file, errors, *args, **kwargs):
             if file.size > maxFileSize * 1024 * 1024: #coverts to megabytes
-                return f"{file.name} bigger than {maxFileSize}"
-            return func(file, *args, **kwargs)
+                errors.append(f"{file.name} bigger than {maxFileSize}")
+            return func(file, errors,*args, **kwargs)
         return wrapper
     return decorator
 
 def sanitizeFileNameDecorator(func):
     @wraps(func)
-    def wrapper(file, *args, **kwargs):
-        cleaned = "".join(c for c in file if c.isalnum() or c in (' ', '.', '_')).rstrip()
+    def wrapper(file ,errors, *args, **kwargs):
+        cleaned = "".join(c for c in file.name if c.isalnum() or c in (' ', '.', '_')).rstrip()
         file = cleaned
-        return func(file, *args, **kwargs)
+        return func(file, errors,*args, **kwargs)
     return wrapper
 
 ##saving
@@ -206,26 +212,26 @@ def uniqueFileName(name):
 
 uploadDIR = os.path.join(settings.MEDIA_ROOT, "uploads")
 
-@fileSizeCheckDecorator(5) #5mb 
-@mimeCheckDecorator()
 @sanitizeFileNameDecorator
-def saveFile(file):
+@mimeCheckDecorator
+@fileSizeCheckDecorator(5) #5mb 
+
+def saveFile(file, errors):
+    if errors:
+        raise ValidationError(errors)
 
     #dynamically creating upload dir
-    if not os.path.exists(uploadDIR):
-        os.makedirs(uploadDIR)
-
+    os.makedirs(uploadDIR, exist_ok=True)
     #Creating unique filenaem
     filename = uniqueFileName(file.name)
-    path = os.path.join(uploadDIR)
+    path = os.path.join(uploadDIR, filename)
+
     #saving
-    with open(path, "wb+")  as destination:
+    with open(path, "wb+") as destination:
         for chunk in file.chunks():
             destination.write(chunk)
 
     return filename
-
-
 
         
 
