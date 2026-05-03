@@ -144,7 +144,7 @@
     </form>
     <!-- Display errors-->
     {% if messages %}
-    <h3>Errors</h3>
+    <h3>Logging</h3>
     <ul>
         {% for message in messages %}
         <li>
@@ -159,13 +159,10 @@
         <ul>
             {% for f in files %}
             <li>
-                {% if f|lower.endswith:('.png', '.jpg', '.jpeg') %}
-                <img src="{{ MEDIA_URL }}uploads/{{ f }}" alt="{{ f }}" width="300">
-                {% elif f|lower.endswith:'.pdf' %}
-                <iframe src="{{ MEDIA_URL }}uploads/{{ f }}" width="600" height="800"></iframe>
-                {% else %}
-                 <p>cant display file {{f}}</p>
-                {% endif %}
+                <a href="/media/uploads/{{ f }}" download>
+                    Download {{ f }}
+                </a>
+
             </li>
             {% endfor %}
         </ul>

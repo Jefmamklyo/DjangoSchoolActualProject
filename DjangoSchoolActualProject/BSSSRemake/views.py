@@ -132,7 +132,7 @@ class UploadFiles(FormView):
         for file in uploadedFiles:
            try:
                 errors = []
-                filename = saveFile(file,errors)
+                filename = saveFile(file, errors)
                 messages.success(self.request, f"{filename} was uploaded")
            except ValidationError as e:
                for error in e.messages:

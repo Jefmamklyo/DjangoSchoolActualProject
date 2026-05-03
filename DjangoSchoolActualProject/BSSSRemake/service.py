@@ -214,7 +214,7 @@ uploadDIR = os.path.join(settings.MEDIA_ROOT, "uploads")
 
 @sanitizeFileNameDecorator
 @mimeCheckDecorator
-@fileSizeCheckDecorator(5) #5mb 
+@fileSizeCheckDecorator(10) #10mb 
 
 def saveFile(file, errors):
     if errors:
