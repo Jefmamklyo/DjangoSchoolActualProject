@@ -10,6 +10,10 @@
     <a href="{% url 'upload' %}"> {{ LForm }} </a>
 
 
+    <a href="{% url 'logout' %}">
+        Logout
+    </a>
+
     <p>
         <h1> {{ projectName }}</h1>
         <h2>{{ title }}</h2>
@@ -155,18 +159,18 @@
     {% endif %}
     <!--Display uploaded files-->
     <h3>Uploaded Files</h3>
-        {% if files %}
-        <ul>
-            {% for f in files %}
-            <li>
-                <a href="/media/uploads/{{ f }}" download>
-                    Download {{ f }}
-                </a>
+    {% if files %}
+    <ul>
+        {% for f in files %}
+        <li>
+            <a href="/media/uploads/{{ f }}" download>
+                Download {{ f }}
+            </a>
 
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
     <p>Please Upload Files</p>
     {% endif %}
     {%endif%}

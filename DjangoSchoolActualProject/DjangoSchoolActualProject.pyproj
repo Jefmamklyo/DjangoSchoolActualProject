@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BSSSRemake\templates\BSSSRemake\index.html" />
+    <Content Include="BSSSRemake\templates\BSSSRemake\login.html" />
+    <Content Include="BSSSRemake\templates\BSSSRemake\logOut.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>

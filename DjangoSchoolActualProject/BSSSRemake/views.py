@@ -8,6 +8,7 @@ from django.contrib import messages
 
 #for class based views
 from django.views.generic import CreateView, ListView, TemplateView, View, FormView
+from django.contrib.auth.views import LoginView, LogoutView
 
 #import from Other Files
 from .models import School, Course, ProjectInfo
@@ -15,10 +16,40 @@ from .forms import InputForms, PROJECTFORMS, UploadFile
 from .service import CourseValidator
 from .service import conflictDetection
 from . service import saveFile
-    
-    
+   
+#Login
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
+
+from django.contrib.auth import logout
+
+
+##############
+##Authentication##
+##############
+
+class loginView(LoginView):
+     template_name = "BSSSRemake/login.html"
+     redirect_authenticated_user = True
+     success_url = reverse_lazy("view1") #force redirection to view 1
+
+class logOutView(TemplateView):
+    template_name = "BSSSRemake/logOut.html"
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return super().get(request, *args, **kwargs)
+
+#custom Mixin
+class staffMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+
 class View1(TemplateView):
     template_name = "BSSSRemake/index.html"
+
     
     def get_context_data(self, **kwargs):
         #calls the parent method to get context
@@ -31,11 +62,14 @@ class View1(TemplateView):
 
 
     
-class View2(CreateView):
+class View2(LoginRequiredMixin, CreateView):
     model = Course
     form_class = InputForms
     template_name = "BSSSRemake/index.html"
     success_url = "/view2/"
+
+    login_url = reverse_lazy("login")
+
 
     def form_valid(self, form):
         #access variables beofre submission
@@ -75,11 +109,15 @@ class View2(CreateView):
 ############################################################
 #______________________Adjacecny List______________________#
 ############################################################
-class Reccomendation(CreateView):
+class Reccomendation(staffMixin,LoginRequiredMixin,CreateView):
     template_name = "BSSSRemake/index.html"
     success_url = "/recommendation/"
     form_class = PROJECTFORMS
     model = ProjectInfo
+
+    login_url = reverse_lazy("login")
+
+
 
     def get_initial(self):
         initial = super().get_initial()
@@ -113,10 +151,13 @@ class Reccomendation(CreateView):
 ############################################################
 #_______________________File Uploads_______________________#
 ############################################################
-class UploadFiles(FormView):
+class UploadFiles(staffMixin,LoginRequiredMixin,FormView):
     template_name = "BSSSRemake/index.html"
     form_class = UploadFile
     success_url = "/upload/"#add somethign here 
+
+    login_url = reverse_lazy("login")
+
 
     def getFiles(self):
         path = os.path.join(settings.MEDIA_ROOT, "uploads")

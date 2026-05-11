@@ -118,3 +118,8 @@ STATIC_ROOT = posixpath.join(*(BASE_DIR.split(os.path.sep) + ['static']))
 #Media files (User uploaded content)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+#login and logout
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/view1/"
+LOGOUT_REDIRECT_URL = "/login/"
