@@ -31,14 +31,9 @@ from django.contrib.auth import logout
 class loginView(LoginView):
      template_name = "BSSSRemake/login.html"
      redirect_authenticated_user = True
-     success_url = reverse_lazy("view1") #force redirection to view 1
 
-class logOutView(TemplateView):
+class logOutView(LogoutView):
     template_name = "BSSSRemake/logOut.html"
-
-    def get(self, request, *args, **kwargs):
-        logout(request)
-        return super().get(request, *args, **kwargs)
 
 #custom Mixin
 class staffMixin(UserPassesTestMixin):
