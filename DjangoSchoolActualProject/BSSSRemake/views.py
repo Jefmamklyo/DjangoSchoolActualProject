@@ -164,15 +164,14 @@ class UploadFiles(staffMixin,LoginRequiredMixin,FormView):
         return os.listdir(path)
 
     def form_valid(self, form):
-        uploadedFiles = self.request.FILES.getlist("files")
-        for file in uploadedFiles:
-           try:
-                errors = []
-                filename = saveFile(file, errors)
-                messages.success(self.request, f"{filename} was uploaded")
-           except ValidationError as e:
-               for error in e.messages:
-                   messages.error(self.request, f"{file.name}: {error}")
+        uploadedFiles = self.request.FILES.get("files")
+        try:
+            errors = []
+            filename = saveFile(uploadedFiles, errors)
+            messages.success(self.request, f"{filename} was uploaded")
+        except ValidationError as e:
+            for error in e.messages:
+                messages.error(self.request, f"{uploadedFiles.name}: {error}")
 
         return super().form_valid(form)
     def get_context_data(self, **kwargs):
