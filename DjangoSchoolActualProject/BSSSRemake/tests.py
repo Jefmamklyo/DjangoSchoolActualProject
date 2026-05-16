@@ -40,42 +40,56 @@ def testLogger(func):
     return wrapper
 
 
+    
+#Utlitiy
+def fileSize(x):
+    return x * 1024 * 1024 #in megabytes
+
+PNG_HEADER = b"\x89PNG\r\n\x1a\n"
 
 
 
 
 
-#Create new media root 
-@override_settings(MEDIA_ROOT = "test_media")
+
+@override_settings(MEDIA_ROOT="test_media")
 class userTests(TestCase):
-    
-
-    #setupclass method move to setup
-    
 
     def setUp(self):
-        #create upload directory
         self.upload_dir = os.path.join(settings.MEDIA_ROOT, "uploads")
         os.makedirs(self.upload_dir, exist_ok=True)
 
-        pass
-
     def tearDown(self):
-        #cleanup upload directoy
         shutil.rmtree(settings.MEDIA_ROOT, ignore_errors=True)
 
-
+    def fileSize(self, mb):
+        return mb * 1024 * 1024
     
-    #Utlitiy
-    def fileSize(self, x):
-        return x * 1024 * 1024 #in megabytes
-    ####
+    @testLogger  #test all valid files
+    def testValidFile(self):
+
+        testFile = SimpleUploadedFile(
+            name="safe.png",
+            content=PNG_HEADER + b"\x00" * 200,
+            content_type="image/png"
+        )
+
+        errors = []
+
+        filename = saveFile(testFile, errors)
+
+        self.assertTrue(filename)
+
 
             
-    #test invalid mimetype
     @testLogger
     def testMimeType(self):
-        testFile = SimpleUploadedFile(name = "virus.exe", content = b"mal content", content_type = 'application/octet-stream')
+
+        testFile = SimpleUploadedFile(
+            name="virus.exe",
+            content=b"random bad data",
+            content_type="application/octet-stream"
+        )
 
         errors = []
 
@@ -85,29 +99,31 @@ class userTests(TestCase):
 
 
 
-
-    #test File boundry
-    @testLogger
+    #@testLogger
     def testFileBoundry(self):
-         testFile = SimpleUploadedFile(name = "test.png", content = b"x" * self.fileSize(11), content_type = 'image/png')
 
-         errors= []
+        testFile = SimpleUploadedFile(
+            name="big.png",
+            content=PNG_HEADER + b"\x00" * self.fileSize(11),
+            content_type="image/png"
+        )
 
-         with self.assertRaises(ValidationError):
+        errors = []
+
+        with self.assertRaises(ValidationError):
             saveFile(testFile, errors)
 
 
-    #test filename sanitatsion
 
     @testLogger
-    def testFilename(self):
+    def testFilenameSanitisation(self):
 
-        original = "safe_name.png"
+        original = "../unsafe<>name.png"
 
         testFile = SimpleUploadedFile(
-        name=original,
-        content=b"x" * (1024),  # small valid file
-        content_type="image/png"
+            name=original,
+            content=PNG_HEADER + b"\x00" * 200,
+            content_type="image/png"
         )
 
         errors = []
@@ -116,3 +132,23 @@ class userTests(TestCase):
 
         self.assertTrue(filename)
         self.assertNotEqual(filename, original)
+        self.assertNotIn("<", filename)
+        self.assertNotIn(">", filename)
+        self.assertNotIn("..", filename)
+
+
+
+    @testLogger #final test
+    def testFullPipelineSuccess(self):
+
+        testFile = SimpleUploadedFile(
+            name="final.png",
+            content=PNG_HEADER + b"\x00" * 300,
+            content_type="image/png"
+        )
+
+        errors = []
+
+        filename = saveFile(testFile, errors)
+
+        self.assertTrue(filename)
